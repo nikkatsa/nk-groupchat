@@ -15,6 +15,9 @@ The code provides basic functionality and the below actions:
 
 A very basic UI can be found at [/src/main/resources/index.html](https://github.com/nikkatsa/nk-groupchat/blob/master/src/main/resources/index.html)
 
+![Image of Client UI]
+(https://github.com/nikkatsa/nk-groupchat/blob/master/src/main/resources/assets/ClientUI.png)
+
 ## Server
 
 The server code can be found at [/src/main/java/com/nikoskatsanos/netty/groupchat](https://github.com/nikkatsa/nk-groupchat/tree/master/src/main/java/com/nikoskatsanos/netty/groupchat)
