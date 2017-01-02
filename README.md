@@ -1,6 +1,6 @@
 # nk-groupchat
 
-This is a [__Netty__\(http://netty.io) server using __Websockets__ for the communication between the server and a client.
+This is a [__Netty__](http://netty.io) server using __Websockets__ for the communication between the server and a client.
 
 ## Functionality
 
@@ -24,8 +24,8 @@ The server code can be found at [/src/main/java/com/nikoskatsanos/netty/groupcha
 Below are the steps for building the server. __Note__ that the code has a dependency to [nk-jutil](https://github.com/nikkatsa/nk-jutil), which is not pushed in Maven Central Repo, hence the user has to manually pull the project and build it, before building the Groupchat server.
 
 * Pull [nk-jutil](https://github.com/nikkatsa/nk-jutil)
-* Build nk-jutils by __mvn clean install__
+* Build nk-jutils by `mvn clean install`
 * Pull [nk-groupchat](https://github.com/nikkatsa/nk-groupchat)
-* Build nk-groupchat by __mvn clean install__
+* Build nk-groupchat by `mvn clean install`
 * Run __.sh__ file in /target/appassembler/bin
 * Launch /src/main/resources/index.html
