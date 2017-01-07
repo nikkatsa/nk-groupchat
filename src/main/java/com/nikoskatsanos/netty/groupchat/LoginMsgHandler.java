@@ -42,7 +42,7 @@ public class LoginMsgHandler extends SimpleChannelInboundHandler<BaseGroupChatMs
             if (users.values().contains(userName)) {
                 log.info("User %s tried to login with a user name that already exists", msg.getRemoteAddress());
 
-                ctx.channel().writeAndFlush(new TextWebSocketFrame(String.format("User %s already exists. Please choose a different user name")));
+                ctx.channel().writeAndFlush(new TextWebSocketFrame(String.format("User %s already exists. Please choose a different user name", userName)));
                 return;
             }
             users.put(msg.getRemoteAddress(), userName);

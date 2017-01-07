@@ -1,5 +1,6 @@
 package com.nikoskatsanos.netty.groupchat;
 
+import com.nikoskatsanos.jutils.core.networking.NetworkUtils;
 import com.nikoskatsanos.jutils.core.threading.NamedThreadFactory;
 import com.nikoskatsanos.nkjutils.yalf.YalfLogger;
 import io.netty.channel.ChannelFuture;
@@ -31,7 +32,7 @@ public class GroupChatServerBootstrap {
             final CommandLine cmd = new DefaultParser().parse(createCmdOptions(), args);
 
             final int port = cmd.hasOption(PORT_CMD) ? Integer.parseInt(cmd.getOptionValue(PORT_CMD)) : GROUP_CHAT_SERVER_DEFAULT_PORT;
-            final InetSocketAddress serverAddress = new InetSocketAddress("localhost", port);
+            final InetSocketAddress serverAddress = new InetSocketAddress(NetworkUtils.getLocalAddress().getHostName(), port);
 
             final GroupChatServer groupChatServer = new GroupChatServer(serverAddress);
             final ExecutorService groupChatServerCaller = Executors.newSingleThreadExecutor(new NamedThreadFactory("GroupChatServerInitializer", true));
