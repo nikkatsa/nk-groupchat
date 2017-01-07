@@ -36,6 +36,8 @@ public class UsersRegistry {
     }
 
     public final void unregisterUser(final SocketAddress socketAddress) {
-        this.users.remove(socketAddress);
+        if (socketAddress != null) {
+            this.users.remove(socketAddress);
+        }
     }
 }
