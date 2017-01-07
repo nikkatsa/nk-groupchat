@@ -62,7 +62,7 @@
                             <programs>
                                 <program>
                                     <id>WebsocketServer</id>
-                                    <mainClass>com.nikoskatsanos.netty.groupchat.GroupChatServerBootstrap</mainClass>
+                                    <mainClass>com.nikoskatsanos.netty.groupchat.server.GroupChatServerBootstrap</mainClass>
                                     <platforms>
                                         <platform>unix</platform>
                                     </platforms>
