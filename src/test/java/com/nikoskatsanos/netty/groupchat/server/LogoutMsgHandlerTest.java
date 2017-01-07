@@ -26,6 +26,7 @@ public class LogoutMsgHandlerTest {
 
     private EmbeddedChannel channel;
     private ChannelGroup channelGroup;
+    private UsersRegistry usersRegistry;
     private WebSocketClientHandshakeHandler handshakeHandler;
     private LoginMsgHandler loginMsgHandler;
     private LogoutMsgHandler logoutMsgHandler;
@@ -33,9 +34,10 @@ public class LogoutMsgHandlerTest {
     @Before
     public void setupLogoutMsgHandlerTest() {
         this.channelGroup = new DefaultChannelGroup(ImmediateEventExecutor.INSTANCE);
+        this.usersRegistry = new UsersRegistry();
         this.handshakeHandler = new WebSocketClientHandshakeHandler();
-        this.loginMsgHandler = new LoginMsgHandler(this.channelGroup);
-        this.logoutMsgHandler = new LogoutMsgHandler(this.channelGroup);
+        this.loginMsgHandler = new LoginMsgHandler(this.channelGroup, this.usersRegistry);
+        this.logoutMsgHandler = new LogoutMsgHandler(this.channelGroup, this.usersRegistry);
         this.channel = new EmbeddedChannel(this.handshakeHandler, this.loginMsgHandler, this.logoutMsgHandler);
     }
 

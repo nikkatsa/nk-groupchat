@@ -20,11 +20,13 @@ public class GroupChatServerChannelInitializer extends ChannelInitializer<Channe
     private final StatsHandler statsHandler;
     private final LoginMsgHandler loginMsgHandler;
     private final ChannelGroup allClientsGroup;
+    private final UsersRegistry usersRegistry;
 
     public GroupChatServerChannelInitializer(final ChannelGroup allClientsGroup) {
         this.statsHandler = new StatsHandler();
         this.allClientsGroup = allClientsGroup;
-        this.loginMsgHandler = new LoginMsgHandler(this.allClientsGroup);
+        this.usersRegistry = new UsersRegistry();
+        this.loginMsgHandler = new LoginMsgHandler(this.allClientsGroup, this.usersRegistry);
     }
 
     @Override
@@ -38,7 +40,7 @@ public class GroupChatServerChannelInitializer extends ChannelInitializer<Channe
         pipeline.addLast(new WebSocketClientHandshakeHandler());
         pipeline.addLast(this.loginMsgHandler);
         pipeline.addLast(new WebSocketMessageBroadcastHandler(this.allClientsGroup));
-        pipeline.addLast(new LogoutMsgHandler(this.allClientsGroup));
+        pipeline.addLast(new LogoutMsgHandler(this.allClientsGroup, this.usersRegistry));
         pipeline.addLast(new ExceptionCaughtLoggerHandler());
     }
 }

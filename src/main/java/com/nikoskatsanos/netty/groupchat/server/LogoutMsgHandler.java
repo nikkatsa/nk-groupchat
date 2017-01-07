@@ -14,9 +14,11 @@ public class LogoutMsgHandler extends SimpleChannelInboundHandler<GroupChatLogou
     private static final YalfLogger log = YalfLogger.getLogger(LogoutMsgHandler.class);
 
     private final ChannelGroup allClientsGroup;
+    private final UsersRegistry usersRegistry;
 
-    public LogoutMsgHandler(ChannelGroup allClientsGroup) {
+    public LogoutMsgHandler(ChannelGroup allClientsGroup, UsersRegistry usersRegistry) {
         this.allClientsGroup = allClientsGroup;
+        this.usersRegistry = usersRegistry;
     }
 
     @Override
@@ -24,5 +26,6 @@ public class LogoutMsgHandler extends SimpleChannelInboundHandler<GroupChatLogou
         log.info("%s[%s] logging out", msg.getVerifiedUserName(), ctx.channel().remoteAddress());
         this.allClientsGroup.writeAndFlush(new TextWebSocketFrame(String.format("%s left the chat room", msg.getVerifiedUserName())));
         ctx.channel().close();
+        this.usersRegistry.unregisterUser(ctx.channel().remoteAddress());
     }
 }

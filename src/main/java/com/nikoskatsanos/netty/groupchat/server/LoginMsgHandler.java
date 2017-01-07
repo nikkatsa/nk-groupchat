@@ -10,10 +10,6 @@ import io.netty.channel.group.ChannelGroup;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.util.ReferenceCountUtil;
 
-import java.net.SocketAddress;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 /**
  * @author nikkatsa
  */
@@ -22,30 +18,32 @@ public class LoginMsgHandler extends SimpleChannelInboundHandler<BaseGroupChatMs
     private static final YalfLogger log = YalfLogger.getLogger(LoginMsgHandler.class);
 
     private final ChannelGroup allClientsChannelGroup;
-    private final Map<SocketAddress, String> users = new ConcurrentHashMap<>();
+    private final UsersRegistry usersRegistry;
 
-    public LoginMsgHandler(ChannelGroup allClientsChannelGroup) {
+    public LoginMsgHandler(ChannelGroup allClientsChannelGroup, UsersRegistry usersRegistry) {
         this.allClientsChannelGroup = allClientsChannelGroup;
+        this.usersRegistry = usersRegistry;
     }
 
     @Override
     protected void channelRead0(final ChannelHandlerContext ctx, final BaseGroupChatMsg msg) throws Exception {
         if (msg instanceof GroupChatLoginMsg) {
-            if (users.containsKey(msg.getRemoteAddress())) {
+            if (usersRegistry.containsSocketAddress(msg.getRemoteAddress())) {
                 log.info("User %s is already logged in", msg.getRemoteAddress());
 
-                ctx.channel().writeAndFlush(new TextWebSocketFrame(String.format("You are already logged in as %s", users.get(msg.getRemoteAddress()))));
+                ctx.channel().writeAndFlush(new TextWebSocketFrame(String.format("You are already logged in as %s", usersRegistry.getUserForAddress(msg
+                        .getRemoteAddress()))));
                 return;
             }
 
             final String userName = ((GroupChatLoginMsg) msg).getUserName();
-            if (users.values().contains(userName)) {
+            if (usersRegistry.containsUser(userName)) {
                 log.info("User %s tried to login with a user name that already exists", msg.getRemoteAddress());
 
                 ctx.channel().writeAndFlush(new TextWebSocketFrame(String.format("User %s already exists. Please choose a different user name", userName)));
                 return;
             }
-            users.put(msg.getRemoteAddress(), userName);
+            usersRegistry.registerUser(msg.getRemoteAddress(), userName);
 
             log.info("User %s-%s joined the chat", userName, msg.getRemoteAddress().toString());
 
@@ -53,20 +51,20 @@ public class LoginMsgHandler extends SimpleChannelInboundHandler<BaseGroupChatMs
             this.allClientsChannelGroup.writeAndFlush(new TextWebSocketFrame(String.format("%s joined the chat", ((GroupChatLoginMsg) msg).getUserName())));
             return;
         } else {
-            if (!users.containsKey(msg.getRemoteAddress())) {
+            if (!usersRegistry.containsSocketAddress(ctx.channel().remoteAddress())) {
                 ctx.channel().writeAndFlush(new TextWebSocketFrame("You are not logged in!"));
                 return;
             }
             ReferenceCountUtil.retain(msg);
 
-            final String verifiedUserName = users.get(ctx.channel().remoteAddress());
+            final String verifiedUserName = usersRegistry.getUserForAddress(ctx.channel().remoteAddress());
             msg.setVerifiedUserName(verifiedUserName);
 
             ctx.fireChannelRead(msg);
         }
     }
 
-    public Map<SocketAddress, String> getUsers() {
-        return this.users;
+    public final UsersRegistry getUsersRegistry() {
+        return this.usersRegistry;
     }
 }

@@ -5,8 +5,6 @@ import com.nikoskatsanos.netty.groupchat.api.BaseGroupChatMsgCodec;
 import com.nikoskatsanos.netty.groupchat.api.GroupChatLoginMsg;
 import com.nikoskatsanos.netty.groupchat.api.GroupChatMsg;
 import com.nikoskatsanos.netty.groupchat.api.GroupChatWrappedMsg;
-import com.nikoskatsanos.netty.groupchat.server.LoginMsgHandler;
-import com.nikoskatsanos.netty.groupchat.server.WebSocketClientHandshakeHandler;
 import io.netty.channel.ChannelId;
 import io.netty.channel.embedded.EmbeddedChannel;
 import io.netty.channel.group.ChannelGroup;
@@ -34,12 +32,14 @@ public class LoginMsgHandlerTest {
     private WebSocketClientHandshakeHandler handshakeHandler;
     private LoginMsgHandler loginMsgHandler;
     private ChannelGroup channelGroup;
+    private UsersRegistry usersRegistry;
 
     @Before
     public void setupLoginMsgHandlerTest() {
         this.channelGroup = new DefaultChannelGroup(ImmediateEventExecutor.INSTANCE);
         this.handshakeHandler = new WebSocketClientHandshakeHandler();
-        this.loginMsgHandler = new LoginMsgHandler(this.channelGroup);
+        this.usersRegistry = new UsersRegistry();
+        this.loginMsgHandler = new LoginMsgHandler(this.channelGroup, this.usersRegistry);
     }
 
     @After
@@ -61,7 +61,7 @@ public class LoginMsgHandlerTest {
         final TextWebSocketFrame produced = this.channel.<TextWebSocketFrame>readOutbound();
         assertNotNull(produced);
         assertEquals("John Doe joined the chat", produced.text());
-        assertEquals(1, this.loginMsgHandler.getUsers().size());
+        assertEquals(1, this.loginMsgHandler.getUsersRegistry().size());
     }
 
     @Test
@@ -96,7 +96,7 @@ public class LoginMsgHandlerTest {
         assertFalse(channelII.writeInbound(new TextWebSocketFrame(BaseGroupChatMsgCodec.toJson(new GroupChatWrappedMsg<BaseGroupChatMsg>(GroupChatWrappedMsg
                 .GroupChatMsgType.LOGIN, new GroupChatLoginMsg("John Doe"))))));
 
-        assertEquals(1, this.loginMsgHandler.getUsers().size());
+        assertEquals(1, this.loginMsgHandler.getUsersRegistry().size());
     }
 
     @Test

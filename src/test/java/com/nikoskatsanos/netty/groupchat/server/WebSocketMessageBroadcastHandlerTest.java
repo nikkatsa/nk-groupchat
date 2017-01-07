@@ -29,12 +29,14 @@ public class WebSocketMessageBroadcastHandlerTest {
     private WebSocketClientHandshakeHandler handshakeHandler;
     private LoginMsgHandler loginMsgHandler;
     private WebSocketMessageBroadcastHandler messageBroadcastHandler;
+    private UsersRegistry usersRegistry;
 
     @Before
     public void setupWebSocketMessageBroadcastHandlerTest() {
         this.channelGroup = new DefaultChannelGroup(ImmediateEventExecutor.INSTANCE);
+        this.usersRegistry = new UsersRegistry();
         this.handshakeHandler = new WebSocketClientHandshakeHandler();
-        this.loginMsgHandler = new LoginMsgHandler(this.channelGroup);
+        this.loginMsgHandler = new LoginMsgHandler(this.channelGroup, this.usersRegistry);
         this.messageBroadcastHandler = new WebSocketMessageBroadcastHandler(this.channelGroup);
         this.channel = new EmbeddedChannel(this.handshakeHandler, this.loginMsgHandler, this.messageBroadcastHandler);
     }
