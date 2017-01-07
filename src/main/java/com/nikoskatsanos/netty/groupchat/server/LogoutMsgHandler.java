@@ -28,4 +28,11 @@ public class LogoutMsgHandler extends SimpleChannelInboundHandler<GroupChatLogou
         ctx.channel().close();
         this.usersRegistry.unregisterUser(ctx.channel().remoteAddress());
     }
+
+    @Override
+    public void channelUnregistered(final ChannelHandlerContext ctx) throws Exception {
+        log.info("Remote channel %s was closed", ctx.channel().remoteAddress());
+        this.usersRegistry.unregisterUser(ctx.channel().remoteAddress());
+        super.channelUnregistered(ctx);
+    }
 }
