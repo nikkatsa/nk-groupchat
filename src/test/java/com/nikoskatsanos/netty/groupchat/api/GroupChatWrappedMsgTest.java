@@ -1,9 +1,5 @@
 package com.nikoskatsanos.netty.groupchat.api;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -20,14 +16,12 @@ public class GroupChatWrappedMsgTest {
         final GroupChatWrappedMsg<GroupChatLoginMsg> loginMsg = new GroupChatWrappedMsg<>(GroupChatWrappedMsg.GroupChatMsgType.LOGIN, new GroupChatLoginMsg
                 ("John Doe"));
 
-        final ObjectMapper objectMapper = new ObjectMapper();
+        assertEquals("{\"msgType\":\"LOGIN\",\"msg\":{\"userName\":\"John Doe\"}}", BaseGroupChatMsgCodec.toJson(loginMsg));
 
-        String s = objectMapper.writeValueAsString(loginMsg);
-        System.out.println(s);
+        final GroupChatWrappedMsg<GroupChatLogoutMsg> logoutMsg = new GroupChatWrappedMsg<>();
+        logoutMsg.setMsgType(GroupChatWrappedMsg.GroupChatMsgType.LOGOUT);
+        logoutMsg.setMsg(new GroupChatLogoutMsg());
 
-//        BaseGroupChatMsg baseGroupChatMsg = GroupChatWrappedMsg.toGroupChatMsg(s);
-//        if (baseGroupChatMsg instanceof GroupChatLoginMsg) {
-//            System.out.println(((GroupChatLoginMsg) baseGroupChatMsg).getUserName());
-//        }
+        assertEquals("{\"msgType\":\"LOGOUT\",\"msg\":{\"action\":\"logout\"}}", BaseGroupChatMsgCodec.toJson(logoutMsg));
     }
 }

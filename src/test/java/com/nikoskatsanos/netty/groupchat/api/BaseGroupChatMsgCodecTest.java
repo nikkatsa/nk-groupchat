@@ -1,6 +1,7 @@
 package com.nikoskatsanos.netty.groupchat.api;
 
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import java.io.IOException;
 

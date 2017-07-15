@@ -16,11 +16,16 @@ import java.util.Objects;
  */
 public class BaseGroupChatMsgCodec {
 
-    private static final ObjectMapper decoder = new ObjectMapper();
+    private static final ObjectMapper decoder;
 
-    private static final JsonFactory jsonMsgFactory = decoder.getFactory();
+    private static final JsonFactory jsonMsgFactory;
 
     static {
+        decoder = new ObjectMapper();
+        jsonMsgFactory = decoder.getFactory();
+    }
+
+    private BaseGroupChatMsgCodec() {
     }
 
     public static final <T extends BaseGroupChatMsg> String toJson(final T msg) {

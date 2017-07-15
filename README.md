@@ -16,7 +16,7 @@ The code provides basic functionality and the below actions:
 A very basic UI can be found at [/src/main/resources/index.html](https://github.com/nikkatsa/nk-groupchat/blob/master/src/main/resources/index.html)
 
 ![Image of Client UI]
-(https://github.com/nikkatsa/nk-groupchat/blob/master/src/main/resources/assets/ClientUI.png)
+(https://github.com/nikkatsa/nk-groupchat/blob/master/src/main/resources/web/assets/ClientUI.png)
 
 ## Server
 
