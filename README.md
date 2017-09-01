@@ -32,3 +32,4 @@ Below are the steps for building the server. __Note__ that the code has a depend
 * Build nk-groupchat by `mvn clean install`
 * Run __.sh__ file in /target/appassembler/bin
 * Launch /src/main/resources/index.html
+
